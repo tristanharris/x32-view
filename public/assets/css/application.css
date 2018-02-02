@@ -1,4 +1,8 @@
-#chat-text {
-  overflow: auto;
-  height: 500px;
+.meter {
+  background: black;
+  border: 1px solid black;
+  height: 1em;
+  width: 10px;
+  position: relative;
+  display: inline-block;
 }
