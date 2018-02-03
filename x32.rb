@@ -74,30 +74,3 @@ class X32
   end
 
 end
-%q{
-x32 = X32.new('127.0.0.1', 10023)
-x32.run
-#x32.cmd "/shutdown"
-sleep 5
-}
-%q{
-#@client = OSC::Client.new( '10.0.3.243', 10023 )
-@client = OSC::Client.new( '127.0.0.1', 10023 )
-
-def @client.sock
-  @so
-end
-
-@client.send( OSC::Message.new( "/shutdown" ))
-p @client.sock.recvfrom(1000)
-@client.send( OSC::Message.new( "/ch/01/config/name" ))
-p @client.sock.recvfrom(1000)
-
-@client.send( OSC::Message.new( "/meters", "meters/13", 16 ))
-#p @client.sock.recvfrom_nonblock(1000)
-loop do
-  blob = @client.sock.recvfrom(1000)[0]
-  p blob.unpack('g'*48)
-end
-#sleep 3
-#}
