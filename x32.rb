@@ -8,6 +8,7 @@ class X32
   class Channel
     attr_reader :id, :grp
     attr :name, true
+    attr :mute, true
 
     def initialize(grp, id, name)
       @grp, @id, @name = grp, id, name
@@ -49,6 +50,14 @@ class X32
       name = message.to_a[0]
       @channels[ch.to_i - 1 + 32].name = name
     end
+    @connection.add_method(Regexp.new('/ch/[0-9][0-9]/mix/on')) do | message |
+      ch = Regexp.new('/ch/([0-9][0-9])/mix/on').match(message.address)[1]
+      @channels[ch.to_i - 1].mute = message.to_a[0] === 0
+    end
+    @connection.add_method(Regexp.new('/auxin/[0-9][0-9]/mix/on')) do | message |
+      ch = Regexp.new('/auxin/([0-9][0-9])/mix/on').match(message.address)[1]
+      @channels[ch.to_i - 1 + 32].mute = message.to_a[0] === 0
+    end
   end
 
   def run
@@ -57,6 +66,7 @@ class X32
     end
     @channels.each do |ch|
       @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
+      @connection.cmd "/#{ch.grp}/%02d/mix/on" % ch.id
     end
   end
 
