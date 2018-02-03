@@ -25,6 +25,6 @@ function update(data) {
   console.log(data);
   $(data).each(function(c) {
     var level = this;
-    $("[data-channel="+(c+1)+"]").css('width', (200*level)+'px');
+    $("[data-channel="+(c+1)+"]").css('width', (100*level)+'px');
   });
 };

@@ -11,7 +11,7 @@ class X32
     attr :mute, true
 
     def initialize(grp, id, name)
-      @grp, @id, @name = grp, id, name
+      @grp, @id, @name = grp, id, grp+':'+id.to_s
     end
 
     def idx

@@ -1,12 +1,29 @@
 .meter {
-  background: black;
+  background: #d6ff32;
+  background: linear-gradient(to right, #d6ff32 0px,#25891a 77px,#ff0000 100px);
   border: 1px solid black;
   height: 1em;
   width: 10px;
-  position: relative;
   display: inline-block;
+  margin: 0 -1px;
 }
 
 .mute {
-  background: grey;
+  background: grey !important;
+}
+
+.channels li {
+  display: inline;
+  float: left;
+  width: 100px;
+  height: 50px;
+  border: solid 2px black;
+  margin: 2px;
+  background: skyblue;
+  border-radius: 3px;
+}
+
+.channels .name {
+  display: block;
+  text-align: center;
 }

@@ -6,9 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
   </head>
   <body>
-    <ul class="container">
+    <ul class="channels">
       <% @channels.each do |channel| %>
-        <li class='<%=channel.mute ? 'mute' : ''%>'><%=channel.name%><span class='meter' data-channel='<%=channel.idx%>'></span></li>
+        <li class='<%=channel.mute ? 'mute' : ''%>'>
+          <span class='name'>&nbsp;<%=channel.name%></span>
+          <span class='meter' data-channel='<%=channel.idx%>'></span></li>
       <% end %>
     </ul>
 
