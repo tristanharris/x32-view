@@ -42,21 +42,19 @@ class X32
     @connection = Connection.new(ip, port)
     @connection.add_method(Regexp.new('/ch/[0-9][0-9]/config/name')) do | message |
       ch = Regexp.new('/ch/([0-9][0-9])/config/name').match(message.address)[1]
-      name = message.to_a[0]
-      @channels[ch.to_i - 1].name = name
+      update_channel(ch.to_i, :name, message.to_a[0])
     end
     @connection.add_method(Regexp.new('/auxin/[0-9][0-9]/config/name')) do | message |
       ch = Regexp.new('/auxin/([0-9][0-9])/config/name').match(message.address)[1]
-      name = message.to_a[0]
-      @channels[ch.to_i - 1 + 32].name = name
+      update_channel(ch.to_i + 32, :name, message.to_a[0])
     end
     @connection.add_method(Regexp.new('/ch/[0-9][0-9]/mix/on')) do | message |
       ch = Regexp.new('/ch/([0-9][0-9])/mix/on').match(message.address)[1]
-      @channels[ch.to_i - 1].mute = message.to_a[0] === 0
+      update_channel(ch.to_i, :mute, message.to_a[0] === 0)
     end
     @connection.add_method(Regexp.new('/auxin/[0-9][0-9]/mix/on')) do | message |
       ch = Regexp.new('/auxin/([0-9][0-9])/mix/on').match(message.address)[1]
-      @channels[ch.to_i - 1 + 32].mute = message.to_a[0] === 0
+      update_channel(ch.to_i + 32, :mute, message.to_a[0] === 0)
     end
   end
 
@@ -68,6 +66,11 @@ class X32
       @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
       @connection.cmd "/#{ch.grp}/%02d/mix/on" % ch.id
     end
+  end
+
+  private
+  def update_channel(id, field, value)
+    @channels[id - 1].send(field.to_s+'=', value)
   end
 
 end
