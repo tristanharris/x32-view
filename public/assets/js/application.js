@@ -7,8 +7,7 @@ function connected(sock) {
 connect();
 
 function connect() {
-  var scheme   = "<%= @scheme %>";
-  var uri      = scheme + window.document.location.host + "/";
+  var uri      = window.document.location.origin + "/";
   var ws       = new WebSocket(uri);
   ws.onmessage = function(msg) {
     var data = JSON.parse(msg.data);

@@ -1,6 +1,6 @@
 require './app'
-require './middlewares/chat_backend'
+require './middlewares/sockets_backend'
 
-use ChatDemo::ChatBackend
+use X32Watch::SocketsBackend
 
-run ChatDemo::App
+run X32Watch::App

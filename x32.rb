@@ -38,7 +38,6 @@ class X32
   def initialize(ip, port)
     @channels = (1..32).map {|ch| Channel.new('ch', ch, '')}
     @channels += (1..8).map {|ch| Channel.new('auxin', ch, '')}
-    p @channels
     @connection = Connection.new(ip, port)
     @connection.add_method(Regexp.new('/ch/[0-9][0-9]/config/name')) do | message |
       ch = Regexp.new('/ch/([0-9][0-9])/config/name').match(message.address)[1]
