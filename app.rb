@@ -1,8 +1,7 @@
 require 'sinatra/base'
 require_relative 'x32'
 
-Desk = X32.new('127.0.0.1', 10023)
-#Desk = X32.new('10.0.3.243', 10023)
+Desk = X32.new(ENV['X32_IP'], ENV['X32_PORT'])
 Desk.run
 
 module X32Watch
