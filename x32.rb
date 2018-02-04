@@ -40,6 +40,7 @@ class X32
     @channels = (1..32).map {|ch| Channel.new('ch', ch, '')}
     @channels += (1..8).map {|ch| Channel.new('auxin', ch, '')}
     @connection = Connection.new(ip, port)
+    @on_update = nil
     @connection.add_method(Regexp.new('/ch/[0-9][0-9]/config/name')) do | message |
       ch = Regexp.new('/ch/([0-9][0-9])/config/name').match(message.address)[1]
       update_channel(ch.to_i, :name, message.to_a[0])
@@ -48,13 +49,19 @@ class X32
       ch = Regexp.new('/auxin/([0-9][0-9])/config/name').match(message.address)[1]
       update_channel(ch.to_i + 32, :name, message.to_a[0])
     end
-    @connection.add_method(Regexp.new('/ch/[0-9][0-9]/mix/on')) do | message |
-      ch = Regexp.new('/ch/([0-9][0-9])/mix/on').match(message.address)[1]
-      update_channel(ch.to_i, :mute, message.to_a[0] === 0)
+    @connection.add_method('/chmute') do | message |
+      data = message.to_a[0].unpack('V'+('V'*32))
+      data.shift
+      data.each_with_index do |state, idx|
+        update_channel(idx + 1, :mute, state === 0)
+      end
     end
-    @connection.add_method(Regexp.new('/auxin/[0-9][0-9]/mix/on')) do | message |
-      ch = Regexp.new('/auxin/([0-9][0-9])/mix/on').match(message.address)[1]
-      update_channel(ch.to_i + 32, :mute, message.to_a[0] === 0)
+    @connection.add_method('/auxmute') do | message |
+      data = message.to_a[0].unpack('V'+('V'*8))
+      data.shift
+      data.each_with_index do |state, idx|
+        update_channel(idx + 1 + 32, :mute, state === 0)
+      end
     end
   end
 
@@ -64,13 +71,28 @@ class X32
     end
     @channels.each do |ch|
       @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
-      @connection.cmd "/#{ch.grp}/%02d/mix/on" % ch.id
     end
+    @connection.cmd('/formatsubscribe', '/chmute', '/ch/**/mix/on', 1, 32, 80)
+    @connection.cmd('/formatsubscribe', '/auxmute', '/auxin/**/mix/on', 1, 8, 80)
+    Thread.new do
+      loop do
+        @connection.cmd '/renew'
+        sleep 8
+      end
+    end
+  end
+
+  def on_update(&block)
+    @on_update = block
   end
 
   private
   def update_channel(id, field, value)
-    @channels[id - 1].send(field.to_s+'=', value)
+    ch = @channels[id - 1]
+    if ch.send(field) != value
+      ch.send(field.to_s+'=', value)
+      @on_update.call(ch) if @on_update
+    end
   end
 
 end

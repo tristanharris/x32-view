@@ -8,9 +8,10 @@
   <body>
     <ul class="channels">
       <% @channels.each do |channel| %>
-        <li class='<%=channel.mute ? 'mute' : ''%>'>
+        <li data-channel='<%=channel.idx%>' class='<%=channel.mute ? 'mute' : ''%>'>
           <span class='name'>&nbsp;<%=channel.name%></span>
-          <span class='meter' data-channel='<%=channel.idx%>'></span></li>
+          <span class='meter'></span>
+        </li>
       <% end %>
     </ul>
 

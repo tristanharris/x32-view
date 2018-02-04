@@ -14,20 +14,24 @@ module X32Watch
       @app     = app
       @clients = []
 
-      Thread.new do
-        loop do
-          Desk.connection.cmd( "/meters", "/meters/13", 40)
-          sleep 9
-        end
-      end
-
       Desk.connection.add_method('/meters/13') do | message |
         data = message.to_a[0]
         data = data.unpack('V'+('e'*48))
         len = data.shift
         data = data.map{|v| v || 0}
-        @clients.each {|ws| ws.send(data.to_json)}
+        msg :meters, data
       end
+
+      Desk.on_update do |channel|
+        msg(:channel, {:idx => channel.idx, :name => channel.name, :mute => channel.mute})
+      end
+
+      Desk.connection.cmd( "/meters", "/meters/13", 40)
+
+    end
+
+    def msg(type, data)
+      @clients.each {|ws| ws.send({type: type, data: data}.to_json)}
     end
 
     def call(env)
