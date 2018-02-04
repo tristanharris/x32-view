@@ -8,6 +8,7 @@ connect();
 
 function connect() {
   var uri      = window.document.location.origin + "/";
+  uri = uri.replace(/^http/, 'ws');
   var ws       = new WebSocket(uri);
   ws.onmessage = function(msg) {
     var data = JSON.parse(msg.data);
@@ -22,7 +23,6 @@ function connect() {
 };
 
 function update(data) {
-  console.log(data);
   $(data).each(function(c) {
     var level = this;
     $("[data-channel="+(c+1)+"]").css('width', (100*level)+'px');
