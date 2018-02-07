@@ -6,9 +6,13 @@ Desk.run
 
 module X32Watch
   class App < Sinatra::Base
+
+    set :haml, :format => :html5
+
     get "/" do
       @channels = Desk.channels
-      erb :"index.html"
+      haml :index
     end
+
   end
 end

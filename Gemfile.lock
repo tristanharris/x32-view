@@ -5,13 +5,13 @@ GEM
     faye-websocket (0.10.7)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
+    haml (3.1.7)
     mustermann (1.0.1)
     osc-ruby (1.1.1)
     puma (3.11.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
-    redis (4.0.1)
     sinatra (2.0.0)
       mustermann (~> 1.0)
       rack (~> 2.0)
@@ -27,9 +27,9 @@ PLATFORMS
 
 DEPENDENCIES
   faye-websocket
+  haml
   osc-ruby
   puma
-  redis
   sinatra
 
 BUNDLED WITH

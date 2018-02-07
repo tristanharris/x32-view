@@ -1,0 +1,8 @@
+%ul.channels
+  - @channels.each do |channel|
+    %li{'data-channel' => channel.idx, class: channel.mute ? 'mute' : ''}
+      %span.name
+        &nbsp;
+        =channel.name
+      %span.meter
+        &nbsp;
