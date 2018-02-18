@@ -1,7 +1,6 @@
 require 'faye/websocket'
 require 'thread'
 require 'json'
-require 'erb'
 
 require 'osc-ruby'
 require 'osc-ruby/em_server'
@@ -14,19 +13,19 @@ module X32Watch
       @app     = app
       @clients = []
 
-      Desk.connection.add_method('/meters/13') do | message |
-        data = message.to_a[0]
-        data = data.unpack('V'+('e'*48))
-        len = data.shift
-        data = data.map{|v| v || 0}
-        msg :meters, data
-      end
+      Desk.on_start do |d|
+        d.connection.add_method('/meters/13') do | message |
+          data = message.to_a[0]
+          data = data.unpack('V'+('e'*48))
+          len = data.shift
+          data = data.map{|v| v || 0}
+          msg :meters, data
+        end
 
-      Desk.on_update do |channel|
-        msg(:channel, {:idx => channel.idx, :name => channel.name, :mute => channel.mute})
+        d.on_update do |channel|
+          msg(:channel, {:idx => channel.idx, :name => channel.name, :mute => channel.mute})
+        end
       end
-
-      Desk.connection.cmd( "/meters", "/meters/13", 40)
 
     end
 

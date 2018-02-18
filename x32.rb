@@ -65,6 +65,11 @@ class X32
     end
   end
 
+  def poll_channels(speed = 80)
+    @connection.cmd('/formatsubscribe', '/chmute', '/ch/**/mix/on', 1, 32, speed)
+    @connection.cmd('/formatsubscribe', '/auxmute', '/auxin/**/mix/on', 1, 8, speed)
+  end
+
   def run
     Thread.new do
       @connection.run
@@ -72,8 +77,6 @@ class X32
     @channels.each do |ch|
       @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
     end
-    @connection.cmd('/formatsubscribe', '/chmute', '/ch/**/mix/on', 1, 32, 80)
-    @connection.cmd('/formatsubscribe', '/auxmute', '/auxin/**/mix/on', 1, 8, 80)
     Thread.new do
       loop do
         @connection.cmd '/renew'

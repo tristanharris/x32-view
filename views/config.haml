@@ -1,0 +1,16 @@
+%form{method: :post, action: '/config'}
+  %p
+    %label
+      Meter speed:
+      %input{type: 'range', min: 0, max: 99, name: 'cfg[meter_refresh]', value: config[:meter_refresh]}
+  %p
+    %label
+      Mute speed:
+      %input{type: 'range', min: 0, max: 99, name: 'cfg[channel_refresh]', value: config[:channel_refresh]}
+  %p
+    %label
+      Desk IP address:
+      %input{type: 'text', name: 'cfg[desk_ip]', value: config[:desk_ip]}
+  %p
+    %input{type: 'submit'}
+  %p=Desk.running? ? 'Connected' : 'Not connected'
