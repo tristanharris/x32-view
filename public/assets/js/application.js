@@ -14,8 +14,11 @@ function connect() {
     var data = JSON.parse(msg.data);
     if (data.type === 'meters') {
       update(data.data);
+      $('#message').hide();
     } else if (data.type === 'channel') {
       update_channel(data.data);
+    } else if (data.type === 'connection_lost') {
+      $('#message').html('X32 connection lost').show();
     }
   };
   ws.onopen = function(data) {
@@ -37,3 +40,5 @@ function update_channel(data) {
   $("[data-channel="+data.idx+"] .name").html('&nbsp;'+data.name);
   $("[data-channel="+data.idx+"]").toggleClass('mute', data.mute);
 }
+
+$('#message').hide();

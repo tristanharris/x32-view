@@ -25,6 +25,9 @@ module X32Watch
         d.on_update do |channel|
           msg(:channel, {:idx => channel.idx, :name => channel.name, :mute => channel.mute})
         end
+        d.on_connection_lost do
+          msg :connection_lost, nil
+        end
       end
 
     end

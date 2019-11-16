@@ -108,6 +108,7 @@ class X32
         if (Time.now - @last_message_at) < 2
           @connection.cmd '/renew'
         else
+          @on_connection_lost.call if @on_connection_lost
           start_polling
         end
         sleep 8
@@ -117,6 +118,10 @@ class X32
 
   def on_update(&block)
     @on_update = block
+  end
+
+  def on_connection_lost(&block)
+    @on_connection_lost = block
   end
 
   private
