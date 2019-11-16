@@ -6,6 +6,9 @@ Config = {
   channel_refresh: 80,
   desk_ip: ENV['X32_IP']
 }
+
+Thread::abort_on_exception = true
+
 class Restarter
 
   def initialize(null_object = nil, &block)
