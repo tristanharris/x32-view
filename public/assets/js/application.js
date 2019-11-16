@@ -10,7 +10,9 @@ function connect() {
   var uri      = window.document.location.origin + "/";
   uri = uri.replace(/^http/, 'ws');
   var ws       = new WebSocket(uri);
+  var last_message = Date.now(); 
   ws.onmessage = function(msg) {
+    last_message = Date.now();
     var data = JSON.parse(msg.data);
     if (data.type === 'meters') {
       update(data.data);
@@ -21,6 +23,11 @@ function connect() {
       $('#message').html('X32 connection lost').show();
     }
   };
+  setInterval(function(){
+    if (Date.now() - last_message > 1000) {
+      $('#message').html('Server connection lost').show();
+    }
+  }, 3000);
   ws.onopen = function(data) {
     connected(ws);
     ws.onclose = function(data) {
