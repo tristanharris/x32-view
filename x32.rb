@@ -47,10 +47,14 @@ class X32
 
   def initialize(ip, port)
     @poll_fns = []
+    @last_message_at = Time.now
     @channels = (1..32).map {|ch| Channel.new('ch', ch, '')}
     @channels += (1..8).map {|ch| Channel.new('auxin', ch, '')}
     @connection = Connection.new(ip, port)
     @on_update = nil
+    @connection.add_method(Regexp.new('/')) do | message |
+      @last_message_at = Time.now
+    end
     @connection.add_method(Regexp.new('/ch/[0-9][0-9]/config/name')) do | message |
       ch = Regexp.new('/ch/([0-9][0-9])/config/name').match(message.address)[1]
       update_channel(ch.to_i, :name, message.to_a[0])
@@ -100,14 +104,12 @@ class X32
       end
     end
     Thread.new do
-      last_time = Time.now
       loop do
-        if Time.now - last_time < 9
+        if (Time.now - @last_message_at) < 2
           @connection.cmd '/renew'
         else
           start_polling
         end
-        last_time = Time.now
         sleep 8
       end
     end
