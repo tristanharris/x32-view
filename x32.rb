@@ -46,6 +46,7 @@ class X32
   end
 
   def initialize(ip, port)
+    @poll_fns = []
     @channels = (1..32).map {|ch| Channel.new('ch', ch, '')}
     @channels += (1..8).map {|ch| Channel.new('auxin', ch, '')}
     @connection = Connection.new(ip, port)
@@ -74,6 +75,11 @@ class X32
     end
   end
 
+  def poll(&block)
+    @poll_fns << block
+    block.call(self)
+  end
+
   def poll_channels(speed = 80)
     @connection.cmd('/formatsubscribe', '/chmute', '/ch/**/mix/on', 1, 32, speed)
     @connection.cmd('/formatsubscribe', '/auxmute', '/auxin/**/mix/on', 1, 8, speed)
@@ -94,8 +100,14 @@ class X32
       end
     end
     Thread.new do
+      last_time = Time.now
       loop do
-        @connection.cmd '/renew'
+        if Time.now - last_time < 9
+          @connection.cmd '/renew'
+        else
+          start_polling
+        end
+        last_time = Time.now
         sleep 8
       end
     end
@@ -112,6 +124,12 @@ class X32
     if ch.send(field) != value
       ch.send(field.to_s+'=', value)
       @on_update.call(ch) if @on_update
+    end
+  end
+
+  def start_polling
+    @poll_fns.each do |f|
+      f.call(self)
     end
   end
 

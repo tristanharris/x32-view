@@ -57,8 +57,10 @@ Desk = Restarter.new(OpenStruct.new(channels: [])) do
 end
 
 Desk.on_start do |d|
-  d.poll_channels(Config[:channel_refresh])
-  d.connection.cmd( "/meters", "/meters/13", Config[:meter_reshresh])
+  d.poll do |x|
+    x.poll_channels(Config[:channel_refresh])
+    x.connection.cmd( "/meters", "/meters/13", Config[:meter_reshresh])
+  end
 end
 
 Desk.run
