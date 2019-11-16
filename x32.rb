@@ -10,12 +10,21 @@ class X32
     attr :name, true
     attr :mute, true
 
-    def initialize(grp, id, name)
-      @grp, @id, @name = grp, id, grp+':'+id.to_s
+    def initialize(grp, id, name = nil)
+      @grp, @id, @name = grp, id, name.nil? ? grp+':'+id.to_s : name
+      @connected = false
     end
 
     def idx
       @grp == 'ch' ? id : id + 32
+    end
+
+    def connected?
+      @connected
+    end
+
+    def connected!
+      @connected = true
     end
 
   end
@@ -74,8 +83,15 @@ class X32
     Thread.new do
       @connection.run
     end
-    @channels.each do |ch|
-      @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
+    Thread.new do
+      loop do
+        channels = @channels.reject(&:connected?)
+        break if channels.empty?
+        channels.each do |ch|
+          @connection.cmd "/#{ch.grp}/%02d/config/name" % ch.id
+        end
+        sleep 1
+      end
     end
     Thread.new do
       loop do
@@ -92,6 +108,7 @@ class X32
   private
   def update_channel(id, field, value)
     ch = @channels[id - 1]
+    ch.connected!
     if ch.send(field) != value
       ch.send(field.to_s+'=', value)
       @on_update.call(ch) if @on_update
