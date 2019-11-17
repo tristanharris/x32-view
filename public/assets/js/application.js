@@ -9,7 +9,7 @@ connect();
 function connect() {
   var uri      = window.document.location.origin + "/";
   uri = uri.replace(/^http/, 'ws');
-  var ws       = new WebSocket(uri);
+  var ws       = new ReconnectingWebSocket(uri);
   var last_message = Date.now(); 
   ws.onmessage = function(msg) {
     last_message = Date.now();
