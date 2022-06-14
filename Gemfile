@@ -5,5 +5,6 @@ source "https://rubygems.org"
 gem "faye-websocket"
 gem "sinatra"
 gem "puma"
-gem "redis"
+#gem "redis"
 gem 'osc-ruby'
+gem 'foreman'
