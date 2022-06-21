@@ -90,6 +90,7 @@ class X32
   end
 
   def run
+    @connection.cmd('/ping')
     Thread.new do
       @connection.run
     end

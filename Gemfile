@@ -7,3 +7,4 @@ gem "sinatra"
 gem "puma"
 gem 'osc-ruby'
 gem 'haml'
+gem 'foreman'

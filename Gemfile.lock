@@ -5,6 +5,7 @@ GEM
     faye-websocket (0.10.7)
       eventmachine (>= 0.12.0)
       websocket-driver (>= 0.5.1)
+    foreman (0.87.2)
     haml (3.1.7)
     mustermann (1.0.1)
     osc-ruby (1.1.1)
@@ -27,10 +28,11 @@ PLATFORMS
 
 DEPENDENCIES
   faye-websocket
+  foreman
   haml
   osc-ruby
   puma
   sinatra
 
 BUNDLED WITH
-   1.10.5
+   1.16.1

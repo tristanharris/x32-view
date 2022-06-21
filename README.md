@@ -19,6 +19,20 @@ $ foreman start
 
 You can now visit <http://localhost:5000> to see the application.
 
+##Using Docker
+
+Build:
+Copy and edit the `.env.sample` to `.env` (leave the PORT set to 5000)
+```
+docker build . -t x32-view
+```
+
+Run:
+docker
+```
+run -it --rm -p 5000:5000 x32-view
+```
+
 ## Useful development links
  - https://sites.google.com/site/patrickmaillot/x32
  - https://github.com/pmaillot/X32-Behringer

@@ -66,7 +66,13 @@ Desk.on_start do |d|
   end
 end
 
-Desk.run
+begin
+  Desk.run
+rescue => e
+  puts "Failed to connect to desk on #{ENV['X32_IP']}:#{ENV['X32_PORT']}"
+  puts e
+  exit 1
+end
 
 module X32Watch
   class App < Sinatra::Base
