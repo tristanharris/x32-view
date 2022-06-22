@@ -62,7 +62,7 @@ end
 Desk.on_start do |d|
   d.poll do |x|
     x.poll_channels(Config[:channel_refresh])
-    x.connection.cmd( "/meters", "/meters/13", Config[:meter_reshresh])
+    x.connection.cmd( "/meters", "/meters/13", Config[:meter_refresh])
   end
 end
 
