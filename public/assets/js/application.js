@@ -1,3 +1,5 @@
+const GOOD_AGE = 10; //seconds
+
 var ws = null;
 
 function connected(sock) {
@@ -10,12 +12,15 @@ function connect() {
   var uri      = window.document.location.origin + "/";
   uri = uri.replace(/^http/, 'ws');
   var ws       = new ReconnectingWebSocket(uri);
-  var last_message = Date.now(); 
+  var last_message = Date.now();
   ws.onmessage = function(msg) {
     last_message = Date.now();
     var data = JSON.parse(msg.data);
     if (data.type === 'meters') {
       update(data.data);
+      $('#message').hide();
+    } else if (data.type === 'signal') {
+      update_signals(data.data);
       $('#message').hide();
     } else if (data.type === 'channel') {
       update_channel(data.data);
@@ -39,7 +44,15 @@ function connect() {
 function update(data) {
   $(data).each(function(c) {
     var level = this;
-    $("[data-channel="+(c+1)+"] .meter").css('width', (100*level)+'px');
+    $(".channels [data-channel="+(c+1)+"] .meter").css('width', (100*level)+'px');
+  });
+};
+
+function update_signals(data) {
+  $(data).each(function(c) {
+    var signal_age = this;
+    $(".signals [data-channel="+(c+1)+"] .age").text(Math.round(signal_age));
+    $(".signals [data-channel="+(c+1)+"]").toggle(signal_age < GOOD_AGE);
   });
 };
 

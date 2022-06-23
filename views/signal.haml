@@ -1,0 +1,12 @@
+%ul.signals
+  - @channels.each do |channel|
+    %li{'data-channel' => channel.idx}
+      %span.id
+        =channel.idx
+      %span.name
+        =channel.name
+      Last signal
+      %span.age
+      seconds ago
+
+%div#message

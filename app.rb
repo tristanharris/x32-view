@@ -84,6 +84,11 @@ module X32Watch
       haml :index
     end
 
+    get "/signal" do
+      @channels = Desk.get.channels
+      haml :signal
+    end
+
     get "/config" do
       haml :config, :locals => {config: Config}
     end
