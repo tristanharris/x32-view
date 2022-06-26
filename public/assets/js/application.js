@@ -51,8 +51,11 @@ function update(data) {
 function update_signals(data) {
   $(data).each(function(c) {
     var signal_age = this;
+    var perc = (GOOD_AGE - signal_age) / GOOD_AGE * 100;
+    var col = 'lightgreen';
     $(".signals [data-channel="+(c+1)+"] .age").text(Math.round(signal_age));
-    $(".signals [data-channel="+(c+1)+"]").toggle(signal_age < GOOD_AGE);
+    $(".signals [data-channel="+(c+1)+"]").toggle(signal_age < GOOD_AGE).
+      css('background', 'linear-gradient(to right, '+col+' '+perc+'%,transparent '+perc+'%,transparent 100%');
   });
 };
 

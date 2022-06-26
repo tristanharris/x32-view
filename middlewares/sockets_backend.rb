@@ -44,7 +44,7 @@ module X32Watch
 
     def call(env)
       if Faye::WebSocket.websocket?(env)
-        ws = Faye::WebSocket.new(env, nil, {ping: KEEPALIVE_TIME })
+        ws = Faye::WebSocket.new(env, nil, {})
         ws.on :open do |event|
           p [:open, ws.object_id, env['REMOTE_ADDR']]
           @clients << ws
