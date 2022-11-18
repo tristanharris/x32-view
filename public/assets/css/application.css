@@ -59,3 +59,20 @@
 .signals li {
   border-bottom: 1px solid black;
 }
+
+.signals .bad {
+  background-color: red !important;
+}
+
+.signals .off {
+  display: none;
+}
+
+.signals .id {
+  min-width: 20px;
+  display: inline-block;
+}
+.signals .name {
+  min-width: 100px;
+  display: inline-block;
+}

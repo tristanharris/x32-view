@@ -85,7 +85,7 @@ module X32Watch
     end
 
     get "/signal" do
-      @channels = Desk.get.channels
+      @channels = Desk.get.channels[0..25]
       haml :signal
     end
 

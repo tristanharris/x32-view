@@ -13,19 +13,23 @@ module X32Watch
       @app     = app
       @clients = []
       @last_time_signal_ok = [Time.now]*48
+      @last_update = Time.now
 
       Desk.on_start do |d|
         d.connection.add_method('/meters/13') do | message |
+          if Time.now - @last_update > 1
+            @last_update = Time.now
           data = message.to_a[0]
           data = data.unpack('V'+('e'*48))
           len = data.shift
           data = data.map{|v| v || 0}
      # data = data.map{rand}
-          msg :meters, data
+        #  msg :meters, data
           data.each_with_index do |v, i|
             @last_time_signal_ok[i] = Time.now if v > THRESHOLD
           end
           msg :signal, @last_time_signal_ok.map{|t| Time.now-t}
+          end
         end
 
         d.on_update do |channel|

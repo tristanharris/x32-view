@@ -1,4 +1,5 @@
 const GOOD_AGE = 10; //seconds
+const GONE_AGE = 100; //seconds
 
 var ws = null;
 
@@ -54,8 +55,11 @@ function update_signals(data) {
     var perc = (GOOD_AGE - signal_age) / GOOD_AGE * 100;
     var col = 'lightgreen';
     $(".signals [data-channel="+(c+1)+"] .age").text(Math.round(signal_age));
-    $(".signals [data-channel="+(c+1)+"]").toggle(signal_age < GOOD_AGE).
-      css('background', 'linear-gradient(to right, '+col+' '+perc+'%,transparent '+perc+'%,transparent 100%');
+    $(".signals [data-channel="+(c+1)+"]").
+      toggleClass('bad', signal_age > GOOD_AGE).
+      toggleClass('off', signal_age < GOOD_AGE);
+      //toggleClass('off', signal_age > GONE_AGE).
+      //css('background', 'linear-gradient(to right, '+col+' '+perc+'%,transparent '+perc+'%,transparent 100%');
   });
 };
 
